@@ -1,0 +1,24 @@
+{
+  "name": "webrtc_learning",
+  "version": "1.0.0",
+  "description": "This is a repo that put the demo code in [WebRTC](https://www.tutorialspoint.com/webrtc/index.htm)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasoonn/WebRTC_Learning.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jasoonn/WebRTC_Learning/issues"
+  },
+  "homepage": "https://github.com/jasoonn/WebRTC_Learning#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "wscat": "^5.1.0"
+  }
+}
