@@ -1,6 +1,6 @@
 //require our websocket library 
-var WebSocketServer = require('ws').Server;
- 
+var WebSocketServer = require('ws').Server; 
+
 //creating a websocket server at port 9090 
 var wss = new WebSocketServer({port: 9090}); 
 
@@ -12,22 +12,22 @@ wss.on('connection', function(connection) {
   
    console.log("User connected");
 	
-   //when server gets a message from a connected user
+   //when server gets a message from a connected user 
    connection.on('message', function(message) { 
 	
       var data; 
+		
       //accepting only JSON messages 
-      try {
+      try { 
          data = JSON.parse(message); 
       } catch (e) { 
          console.log("Invalid JSON"); 
          data = {}; 
-      } 
+      }
 		
       //switching type of the user message 
       switch (data.type) { 
-         //when a user tries to login 
-			
+         //when a user tries to login
          case "login": 
             console.log("User logged", data.name); 
 				
@@ -48,14 +48,14 @@ wss.on('connection', function(connection) {
                }); 
             } 
 				
-            break; 
+            break;
 				
          case "offer": 
             //for ex. UserA wants to call UserB 
-            console.log("Sending offer to: ", data.name); 
+            console.log("Sending offer to: ", data.name);
 				
             //if UserB exists then send him offer details 
-            var conn = users[data.name];
+            var conn = users[data.name]; 
 				
             if(conn != null) { 
                //setting that UserA connected with UserB 
@@ -66,9 +66,9 @@ wss.on('connection', function(connection) {
                   offer: data.offer, 
                   name: connection.name 
                }); 
-            } 
+            }
 				
-            break;  
+            break;
 				
          case "answer": 
             console.log("Sending answer to: ", data.name); 
@@ -83,20 +83,20 @@ wss.on('connection', function(connection) {
                }); 
             } 
 				
-            break;  
+            break; 
 				
          case "candidate": 
             console.log("Sending candidate to:",data.name); 
-            var conn = users[data.name];  
+            var conn = users[data.name];
 				
             if(conn != null) { 
                sendTo(conn, { 
                   type: "candidate", 
                   candidate: data.candidate 
-               });
+               }); 
             } 
 				
-            break;  
+            break;
 				
          case "leave": 
             console.log("Disconnecting from", data.name); 
@@ -104,13 +104,13 @@ wss.on('connection', function(connection) {
             conn.otherName = null; 
 				
             //notify the other user so he can disconnect his peer connection 
-            if(conn != null) { 
+            if(conn != null) {
                sendTo(conn, { 
                   type: "leave" 
-               }); 
-            }  
+              }); 
+            }
 				
-            break;  
+            break;
 				
          default: 
             sendTo(connection, { 
@@ -119,33 +119,35 @@ wss.on('connection', function(connection) {
             }); 
 				
             break; 
-      }  
-   });  
+      }
+		
+   }); 
 	
    //when user exits, for example closes a browser window 
    //this may help if we are still in "offer","answer" or "candidate" state 
    connection.on("close", function() { 
 	
       if(connection.name) { 
-      delete users[connection.name]; 
-		
+         delete users[connection.name]; 
+			
          if(connection.otherName) { 
-            console.log("Disconnecting from ", connection.otherName);
+            console.log("Disconnecting from ", connection.otherName); 
             var conn = users[connection.otherName]; 
-            conn.otherName = null;  
+            conn.otherName = null;
 				
             if(conn != null) { 
                sendTo(conn, { 
                   type: "leave" 
-               });
-            }  
+               }); 
+            }
          } 
-      } 
+      }
+		
    });  
-   sendTo(connection, "Hello world")
 	
-});  
-
+   sendTo(connection, {"a": "Hello world"});  
+});
+  
 function sendTo(connection, message) { 
    connection.send(JSON.stringify(message)); 
 }
